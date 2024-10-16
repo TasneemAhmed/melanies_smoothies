@@ -1,6 +1,6 @@
 # Import python packages
 import streamlit as st
-from snowflake.snowpark.context import get_active_session
+from snowflake.snowpark.context import session
 from snowflake.snowpark.functions import col, when_matched
 
 # Write directly to the app
@@ -10,7 +10,19 @@ st.write(
     """
 )
 
-session = get_active_session()
+# Define your Snowflake connection parameters
+connection_parameters = {
+    "account": "WQEKFND-IH39835",
+    "user": "Tasnoma",
+    "password": "Tasneem_999",
+    "role": "sysadmin",
+    "warehouse": "compute_wh",
+    "database": "smoothies",
+    "schema": "public"
+}
+
+# Create a Snowpark session
+session = Session.builder.configs(connection_parameters).create()
 my_dataframe = session.table("smoothies.public.orders").filter(col("ORDER_FILLED")==0).collect()
 
 if my_dataframe:
